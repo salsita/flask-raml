@@ -1,0 +1,88 @@
+# Ignores the specified file/directory glob patterns
+# from being tracked in a git repository.
+#
+# An untracked file is ignored if its path relative to the repository root directory,
+# or any prefix path of that path, is matched.
+# Files are only ignored when being added or updated.
+# Untrack already tracked files with `git rm --cached filename`.
+# Force adding or updating ignored file with `git add -f filename`.
+#
+# Blank lines or lines starting with # are ignored.
+# Standard glob patterns work (~, ?, *, [characterset]).
+# You can end patterns with a forward slash (/) to match a directory explicitly.
+# You can negate a pattern by starting it with an exclamation point (!).
+#
+# See http://help.github.com/git-ignore/
+# See http://progit.org/book/ch2-2.html#ignoring_files
+# See http://www.kernel.org/pub/software/scm/git/docs/gitignore.html
+# See http://www.google.com/search?num=100&hl=en&q=gitignore
+# See https://github.com/github/gitignore
+#
+# Test the pattern matches by printing all untracked files in the current repository
+# `git ls-files --others --exclude-from=.git/info/exclude`
+# Note, that it only excludes patterns in a non-shared settings in .git/info/exclude.
+
+### Temporary, backup, and log files
+.idea/
+*.log
+*.tmp
+*.swp
+*.bak
+*~
+
+### Python ~ https://github.com/github/gitignore/blob/master/Python.gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
