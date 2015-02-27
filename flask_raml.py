@@ -1,7 +1,7 @@
 """Flask-RAML (REST API Markup Language) API server with parameter conversion, response encoding, and examples."""
 
 __all__ = 'API Loader Converter MimeEncoders RequestError ParameterError'.split()
-__version__ = '0.1.0'
+__version__ = '0.1.2'
 
 from flask import abort, request, has_request_context, make_response, Response
 from flask.ext.mime_encoders import MimeEncoders as _MimeEncoders, json

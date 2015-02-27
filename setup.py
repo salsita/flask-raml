@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-from flask_raml import __version__, __doc__
+import re
+__src__ = file('flask_raml.py').read()
+__doc__ = re.search('^(["\']{3})(.*?)\\1', __src__, re.M|re.S).group(2).strip()
+__version__ = re.search('^__version__\s*=\s*(["\'])(.*?)\\1\s*$', __src__, re.M).group(2).strip()
 
 options = dict(
     minver = '2.6',     # Min Python version required.
@@ -13,7 +16,7 @@ properties = dict(
     name = 'Flask-RAML',
     version = __version__,
     url = 'https://github.com/salsita/flask-raml',
-    download_url = 'https://github.com/salsita/flask-raml/tarball/v{}'.format( __version__),
+    download_url = 'https://github.com/salsita/flask-raml/tarball/v{}'.format(__version__),
     description = __doc__.strip().split('\n', 1)[0].strip('.'),
         # First non-empty line of module doc
     long_description = (__doc__.strip() + '\n').split('\n', 1)[1].strip(),
@@ -39,8 +42,8 @@ properties = dict(
     include_package_data = False,
     install_requires = [
         'Flask>=0.5',
-        'Flask-MIME-encoders>=0.1.0',
-        'PyRAML>=0.1.4',
+        'Flask-MIME-encoders>=0.1.1',
+        'PyRAML>=0.1.5',
         ],
     extras_require = {
         'raml': [

@@ -69,6 +69,12 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.1.2
+
+#### Fixes
+
+- Fix package setup to not require dependencies preinstalled.
+
 ### 0.1.0
 
 #### Features
