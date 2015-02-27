@@ -69,6 +69,12 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.1.3
+
+#### Features
+
+- Update PyRAML dependency to add default option to ignore empty parameters unless '' is specified in enum.
+
 ### 0.1.2
 
 #### Fixes
