@@ -3,19 +3,21 @@
 __all__ = 'API Loader Converter MimeEncoders RequestError ParameterError'.split()
 __version__ = '0.1.4'
 
+from operator import itemgetter
+from functools import wraps, partial
+
 from flask import abort, request, has_request_context, Response
-from flask.ext.mime_encoders import MimeEncoders as _MimeEncoders
 from werkzeug.datastructures import MultiDict
 
-from functools import wraps, partial
-from operator import itemgetter
+import flask.ext.mime_encoders
+import flask.ext.mime_encoders.json
 
 import raml
-from raml import ApiError, RequestError, ParameterError  #export exceptions
+from raml import ApiError, RequestError, ParameterError  # Export exceptions.
 
 
-class MimeEncoders(_MimeEncoders):
-    default = _MimeEncoders.json
+class MimeEncoders(flask.ext.mime_encoders.MimeEncoders):
+    default = flask.ext.mime_encoders.MimeEncoders.json
 
 
 class Converter(raml.Converter):
