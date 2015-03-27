@@ -4,7 +4,7 @@ __all__ = 'API Loader Converter MimeEncoders RequestError ParameterError'.split(
 __version__ = '0.1.4'
 
 from operator import itemgetter
-from functools import wraps, partial
+from functools import wraps
 
 from flask import abort, request, has_request_context, Response
 from werkzeug.datastructures import MultiDict
@@ -191,13 +191,14 @@ class API(raml.API):
     def serve_example(self, resource, methods=None, **options):
         resource = self.get_resource(resource)
 
-        def serve(method_spec, **params):
-            return self.serve(self.get_example, method_spec)
-
         for method in self.get_resource_methods(resource, methods):
             method_spec = self.get_method_spec(resource, method)
-            view = partial(serve, method_spec)
-            self.route(resource, method, **options)(view)
+            self.route(resource, method, **options)(self.create_example_view(method_spec))
+
+    def create_example_view(self, method_spec):
+        def view(**params):
+            return self.serve(self.get_example, method_spec)
+        return view
 
     def get_example(self, method_spec, status=None, mimetype=None):
         response = self.get_response(method_spec, status)
