@@ -69,6 +69,13 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.1.5
+
+#### Fixes
+
+- Fix broken example view function attributes.
+- Fix broken mime encoders import.
+
 ### 0.1.4
 
 #### Fixes
