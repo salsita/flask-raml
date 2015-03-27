@@ -69,6 +69,12 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.1.4
+
+#### Fixes
+
+- Fix PEP-8 style and method spec in view serving decorator.
+
 ### 0.1.3
 
 #### Features

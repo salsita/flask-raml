@@ -1,23 +1,22 @@
 """Flask-RAML (REST API Markup Language) API server with parameter conversion, response encoding, and examples."""
 
 __all__ = 'API Loader Converter MimeEncoders RequestError ParameterError'.split()
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
-from flask import abort, request, has_request_context, make_response, Response
-from flask.ext.mime_encoders import MimeEncoders as _MimeEncoders, json
+from flask import abort, request, has_request_context, Response
+from flask.ext.mime_encoders import MimeEncoders as _MimeEncoders
 from werkzeug.datastructures import MultiDict
 
-from functools import wraps
+from functools import wraps, partial
 from operator import itemgetter
 
 import raml
+from raml import ApiError, RequestError, ParameterError  #export exceptions
 
-ApiError = raml.ApiError
-RequestError = raml.RequestError
-ParameterError = raml.ParameterError
 
 class MimeEncoders(_MimeEncoders):
     default = _MimeEncoders.json
+
 
 class Converter(raml.Converter):
     log = True
@@ -30,19 +29,20 @@ class Converter(raml.Converter):
 
         return super(Converter, self).convert_params(specification, params)
 
+
 class Loader(raml.Loader):
     log = True
 
     spec_param_template = '{{{name}}}'
     flask_param_template = '<{flask_type}:{name}>'
 
-    flask_types = dict(
-        integer = 'int',
-        number = 'float',
-        string = 'string',
-        boolean = 'bool',
-        date = 'date',
-        )
+    flask_types = {
+        'integer': 'int',
+        'number': 'float',
+        'string': 'string',
+        'boolean': 'bool',
+        'date': 'date',
+    }
 
     def get_resource_uri(self, resource):
         uri = resource['relativeUri']
@@ -52,17 +52,14 @@ class Loader(raml.Loader):
                 param['name'] = name
                 param['flask_type'] = self.flask_types[param['type']]
                 uri = uri.replace(spec_format(**param), flask_format(**param))
-            resource['allUriParameters'].update(resource['uriParameters']);
+            resource['allUriParameters'].update(resource['uriParameters'])
         return uri
+
 
 class API(raml.API):
     """Flask API.
     """
-    plugins = dict(raml.API.plugins,
-        loader = Loader,
-        encoders = MimeEncoders,
-        converter = Converter,
-        )
+    plugins = dict(raml.API.plugins, loader=Loader, encoders=MimeEncoders, converter=Converter)
 
     decode_request = True
     encode_response = True
@@ -96,7 +93,7 @@ class API(raml.API):
         result = []
         for uri, resource in self.api.iteritems():
             methods = self.views.get(uri, ())
-            result += [(uri, method) for method in resource['methodsByName'] if method.upper() not in methods]
+            result.extend((uri, method) for method in resource['methodsByName'] if method.upper() not in methods)
         return result
 
     def abort(self, status, error, encoder=True):
@@ -168,9 +165,9 @@ class API(raml.API):
 
     def get_endpoint(self, resource, methods=None, template=None):
         return (template or self.endpoint_template).format(
-            api = self.id,
-            resource = resource['uniqueId'],
-            methods = '+'.join(methods) if methods else 'any',
+            api=self.id,
+            resource=resource['uniqueId'],
+            methods='+'.join(methods) if methods else 'any',
             )
 
     def get_response_mimetype(self, response, accept=None, request=request):
@@ -191,14 +188,14 @@ class API(raml.API):
 
     def serve_example(self, resource, methods=None, **options):
         resource = self.get_resource(resource)
-        uri = resource['uri']
+
+        def serve(method_spec, **params):
+            return self.serve(self.get_example, method_spec)
 
         for method in self.get_resource_methods(resource, methods):
             method_spec = self.get_method_spec(resource, method)
-
-            @self.route(resource, method, **options)
-            def view(**params):
-                return self.serve(self.get_example, method_spec)
+            view = partial(serve, method_spec)
+            self.route(resource, method, **options)(view)
 
     def get_example(self, method_spec, status=None, mimetype=None):
         response = self.get_response(method_spec, status)
