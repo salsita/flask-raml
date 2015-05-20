@@ -69,6 +69,14 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.1.6
+
+#### Features
+
+- Allow custom route request/response decoders/encoders.
+- Allow abort without response body.
+- Enhance logging.
+
 ### 0.1.5
 
 #### Fixes
