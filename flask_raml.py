@@ -98,8 +98,10 @@ class API(raml.API):
             result.extend((uri, method) for method in resource['methodsByName'] if method.upper() not in methods)
         return result
 
-    def abort(self, status, error, encoder=True):
-        return abort(self.encoders[encoder].make_response(dict(status=status, error=error), status=status))
+    def abort(self, status, error=None, encoder=True):
+        return abort(
+            self.encoders[encoder].make_response(dict(status=status, error=error), status=status) if error
+            else Response(status=status))
 
     def add_route(self, resource, view, methods=None, endpoint=None, **options):
         return self.route(resource, methods, endpoint, **options)(view)
