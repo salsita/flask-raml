@@ -126,7 +126,9 @@ class API(raml.API):
             @wraps(view)
             def decorated_view(**uri_params):
                 try:
-                    self.log.info('{} {} {}'.format(request.method, uri, uri_params))
+                    self.log.info('%s %s %s [%s|%s|%s]', request.method, uri, uri_params,
+                        len(uri_params) or '-', len(request.args) or '-', len(request.data) or '-')
+
                     method = self.get_method_spec(resource, request.method)
 
                     if convert_uri_params:
@@ -139,13 +141,21 @@ class API(raml.API):
                             self.abort(400, 'resource does not accept query parameters')
 
                     if decode_request:
+                        self.log.debug('%s %s << %s [%s]', request.method, uri, decode_request.name,
+                            len(request.data))
+
                         uri_params.update(decode_request.get_request_data())
 
-                    self.log.info('{} {} {}'.format(request.method, resource['uri'], uri_params))
+                    self.log.debug('%s %s %s [%s]', request.method, resource['uri'], uri_params,
+                        len(uri_params) or '-')
+
                     response = view(**uri_params)
 
                     if encode_response and not isinstance(response, (Response, basestring)):
                         response = encode_response.make_response(response)
+
+                        self.log.debug('%s %s >> %s [%s:%s] (%d)', request.method, uri, encode_response.name,
+                            type(response.response), len(response.response), response.status)
 
                     return response
 
