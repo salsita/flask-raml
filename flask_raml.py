@@ -113,13 +113,13 @@ class API(raml.API):
         if endpoint is None:
             endpoint = self.get_endpoint(resource, methods, self.endpoint_template)
 
+        decode_request = self.encoders[config['decode_request']]
+        encode_response = self.encoders[config['encode_response']]
+        convert_uri_params = config['convert_uri_params']
+        convert_query_params = config['convert_query_params']
+
         def decorator(view):
             self.log.debug('map %s %s %s', self.id, '/'.join(sorted(methods)), uri)
-
-            decode_request = self.encoders['decode_request']
-            encode_response = self.encoders['encode_response']
-            convert_uri_params = config['convert_uri_params']
-            convert_query_params = config['convert_query_params']
 
             @wraps(view)
             def decorated_view(**uri_params):
