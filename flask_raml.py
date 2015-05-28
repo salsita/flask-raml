@@ -154,7 +154,7 @@ class API(raml.API):
                     if encode_response and not isinstance(response, (Response, basestring)):
                         response = encode_response.make_response(response)
 
-                        self.log.debug('%s %s >> %s [%s:%s] (%d)', request.method, uri, encode_response.name,
+                        self.log.debug('%s %s >> %s [%s:%s] (%s)', request.method, uri, encode_response.name,
                             type(response.response), len(response.response), response.status)
 
                     return response
@@ -217,7 +217,7 @@ class API(raml.API):
         body = self.get_example_body(response, mimetype)
         headers = self.get_example_headers(response)
 
-        self.log.info('%s %s: %d %s (%d bytes, %d headers)', method_spec['method'].upper(), method_spec['uri'],
+        self.log.info('%s %s: %s %s (%d bytes, %d headers)', method_spec['method'].upper(), method_spec['uri'],
             response['status'], body.mimetype, len(body), len(headers))
 
         return Response(body.content, status=response['status'], headers=headers, mimetype=body.mimetype)
