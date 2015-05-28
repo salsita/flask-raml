@@ -43,7 +43,7 @@ properties = dict(
     install_requires = [
         'Flask>=0.5',
         'Flask-MIME-encoders>=0.1.1',
-        'PyRAML>=0.1.6',
+        'PyRAML>=0.1.9',
         ],
     extras_require = {
         'raml': [
