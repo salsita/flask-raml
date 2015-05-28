@@ -1,7 +1,7 @@
 """Flask-RAML (REST API Markup Language) API server with parameter conversion, response encoding, and examples."""
 
 __all__ = 'API Loader Converter MimeEncoders RequestError ParameterError'.split()
-__version__ = '0.1.6'
+__version__ = '0.1.7'
 
 from operator import itemgetter
 from functools import wraps

@@ -69,6 +69,13 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.1.7
+
+#### Fixes
+
+- Fix logging http status passed as string.
+- Fix Python 2.6 support with updated PyRAML 0.1.9.
+
 ### 0.1.6
 
 #### Features
