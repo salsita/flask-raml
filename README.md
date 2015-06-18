@@ -69,6 +69,20 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.2.0
+
+#### Features
+
+- Add custom logger name support.
+- Add view decorator support.
+- Return default http 500 error on any exception.
+- Add authorization support.
+
+#### Fixes
+
+- Update dependencies to support Python 3.
+- Fix package setup on Python 3.
+
 ### 0.1.7
 
 #### Fixes

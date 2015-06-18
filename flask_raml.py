@@ -2,7 +2,7 @@
 
 __all__ = 'MimeEncoders API Loader Converter Content ApiError RequestError ParameterError AuthError'.split()
 
-__version__ = '0.1.7'
+__version__ = '0.2.0'
 
 from operator import itemgetter
 from functools import wraps
