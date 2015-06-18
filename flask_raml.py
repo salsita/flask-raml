@@ -73,6 +73,8 @@ class API(raml.API):
     convert_uri_params = True
     endpoint_template = '{api}{resource}_{methods}'
     requested_response_status_header = 'X-Test-Response-Status'
+    default_error_status = 500
+    default_error_message = 'internal server error'
 
     config_exclude = raml.API.config_exclude.union('unhandled_uris unhandled_methods'.split())
 
@@ -172,6 +174,10 @@ class API(raml.API):
 
                 except ApiError as error:
                     self.abort(error.status, error.message)
+
+                except Exception as error:
+                    self.abort(self.default_error_status, str(error) if self.app.debug else self.default_error_message)
+
 
             self.app.add_url_rule(uri, endpoint, decorated_view, methods=methods)
 
