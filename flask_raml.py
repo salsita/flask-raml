@@ -1,6 +1,7 @@
 """Flask-RAML (REST API Markup Language) API server with parameter conversion, response encoding, and examples."""
 
-__all__ = 'API Loader Converter MimeEncoders RequestError ParameterError'.split()
+__all__ = 'MimeEncoders API Loader Converter Content ApiError RequestError ParameterError AuthError'.split()
+
 __version__ = '0.1.7'
 
 from operator import itemgetter
@@ -13,7 +14,8 @@ import flask.ext.mime_encoders
 import flask.ext.mime_encoders.json
 
 import raml
-from raml import ApiError, RequestError, ParameterError  # Export exceptions.
+from raml import Content, ApiError, RequestError, ParameterError, AuthError
+   # Export raml module properties.
 
 
 class MimeEncoders(flask.ext.mime_encoders.MimeEncoders):
@@ -63,6 +65,8 @@ class API(raml.API):
     """
     plugins = dict(raml.API.plugins, loader=Loader, encoders=MimeEncoders, converter=Converter)
 
+    auth = None
+    logger_name = '{app}:api'
     decode_request = True
     encode_response = True
     convert_query_params = True
@@ -82,6 +86,9 @@ class API(raml.API):
         super(API, self).__init__(path, uri, id, log, **options)
 
         self.default_mimetype = self.encoders.default.mimetype
+
+        if self.auth and getattr(self.auth, 'log', None) is True:
+            self.auth.log = log
 
         if log:
             log.debug(repr(self))
@@ -115,6 +122,7 @@ class API(raml.API):
         if endpoint is None:
             endpoint = self.get_endpoint(resource, methods, self.endpoint_template)
 
+        auth = config['auth']
         decode_request = self.encoders[config['decode_request']]
         encode_response = self.encoders[config['encode_response']]
         convert_uri_params = config['convert_uri_params']
@@ -128,6 +136,9 @@ class API(raml.API):
                 try:
                     self.log.info('%s %s %s [%s|%s|%s]', request.method, uri, uri_params,
                         len(uri_params) or '-', len(request.args) or '-', len(request.data) or '-')
+
+                    if auth:
+                        auth.authorize(uri_params, request)
 
                     method = self.get_method_spec(resource, request.method)
 
