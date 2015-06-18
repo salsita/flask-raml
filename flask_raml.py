@@ -83,7 +83,7 @@ class API(raml.API):
         self.views = {}
 
         if log is None or isinstance(log, basestring):
-            log = app.logger.manager.getLogger(log or 'raml')
+            log = app.logger.manager.getLogger(log or options.get('logger_name', self.logger_name).format(app=app.name))
 
         super(API, self).__init__(path, uri, id, log, **options)
 
