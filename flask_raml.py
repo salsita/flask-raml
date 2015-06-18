@@ -125,6 +125,7 @@ class API(raml.API):
             endpoint = self.get_endpoint(resource, methods, self.endpoint_template)
 
         auth = config['auth']
+        decorate = config.get('decorate', None)
         decode_request = self.encoders[config['decode_request']]
         encode_response = self.encoders[config['encode_response']]
         convert_uri_params = config['convert_uri_params']
@@ -178,6 +179,9 @@ class API(raml.API):
                 except Exception as error:
                     self.abort(self.default_error_status, str(error) if self.app.debug else self.default_error_message)
 
+
+            if decorate:
+                decorated_view = decorate(decorated_view)
 
             self.app.add_url_rule(uri, endpoint, decorated_view, methods=methods)
 
