@@ -42,12 +42,12 @@ properties = dict(
     include_package_data = False,
     install_requires = [
         'Flask>=0.5',
-        'Flask-MIME-encoders>=0.1.1',
-        'PyRAML>=0.1.9',
+        'Flask-MIME-encoders>=0.1.2',
+        'PyRAML>=0.2.0',
         ],
     extras_require = {
         'raml': [
-            'pyraml-parser>=0.0.5',
+            'pyraml-parser>=0.1.5',
             ],
         'yaml': [
             'PyYAML>=3.11',
