@@ -8,6 +8,7 @@ from operator import itemgetter
 from functools import wraps
 
 from flask import abort, request, has_request_context, Response
+from flask.app import HTTPException
 from werkzeug.datastructures import MultiDict
 
 import flask.ext.mime_encoders
@@ -108,9 +109,11 @@ class API(raml.API):
         return result
 
     def abort(self, status, error=None, encoder=True):
-        return abort(
-            self.encoders[encoder].make_response(dict(status=status, error=error), status=status) if error
-            else Response(status=status))
+        if error:
+            return abort(status, response = self.encoders[encoder].make_response(
+                dict(status=status, error=error), status=status))
+        else:
+            return abort(status)
 
     def add_route(self, resource, view, methods=None, endpoint=None, **options):
         return self.route(resource, methods, endpoint, **options)(view)
@@ -173,12 +176,14 @@ class API(raml.API):
 
                     return response
 
+                except HTTPException:
+                    raise
                 except ApiError as error:
                     self.abort(error.status, error.message)
-
                 except Exception as error:
-                    self.abort(self.default_error_status, str(error) if self.app.debug else self.default_error_message)
-
+                    msg =  str(error) if self.app.debug else self.default_error_message
+                    self.log.exception('%r: %s', self.default_error_status, msg);
+                    self.abort(self.default_error_status, msg)
 
             if decorate:
                 decorated_view = decorate(decorated_view)
