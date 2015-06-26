@@ -69,6 +69,13 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.2.1
+
+#### Fixes
+
+- Fix HTTPException handling.
+- Add general Exception logging.
+
 ### 0.2.0
 
 #### Features
