@@ -4,11 +4,13 @@ __all__ = 'MimeEncoders API Loader Converter Content ApiError RequestError Param
 
 __version__ = '0.2.1'
 
+from sys import exc_info
 from operator import itemgetter
 from functools import wraps
 
 from flask import abort, request, has_request_context, Response
 from flask.app import HTTPException
+from werkzeug.http import HTTP_STATUS_CODES
 from werkzeug.datastructures import MultiDict
 
 import flask.ext.mime_encoders
@@ -109,8 +111,12 @@ class API(raml.API):
         return result
 
     def abort(self, status, error=None, encoder=True):
+        (self.log.exception if self.app.debug and exc_info()[0] else self.log.error)(
+             '%r %s %s >> %s', status, request.method, request.path,
+             error or HTTP_STATUS_CODES.get(status, 'Unknown Error'))
+
         if error:
-            return abort(status, response = self.encoders[encoder].make_response(
+            return abort(status, description=error, response = self.encoders[encoder].make_response(
                 dict(status=status, error=error), status=status))
         else:
             return abort(status)
@@ -140,7 +146,10 @@ class API(raml.API):
             @wraps(view)
             def decorated_view(**uri_params):
                 try:
-                    self.log.info('%s %s %s [%s|%s|%s]', request.method, uri, uri_params,
+                    url = request.path
+
+                    self.log.info('%s %s << %s [%s|%s|%s]', request.method, url,
+                        uri_params if self.app.debug or not uri_params else '{...}',
                         len(uri_params) or '-', len(request.args) or '-', len(request.data) or '-')
 
                     if auth:
@@ -157,32 +166,37 @@ class API(raml.API):
                         elif request.args:
                             self.abort(400, 'resource does not accept query parameters')
 
+                    if uri_params:
+                        self.log.debug('%s %s << args: %s [%s]', request.method, url, uri_params,
+                            len(uri_params) or '-')
+
                     if decode_request:
-                        self.log.debug('%s %s << %s [%s]', request.method, uri, decode_request.name,
+                        self.log.debug('%s %s << data: %s [%s]', request.method, url, decode_request.name,
                             len(request.data))
 
                         uri_params.update(decode_request.get_request_data())
-
-                    self.log.debug('%s %s %s [%s]', request.method, resource['uri'], uri_params,
-                        len(uri_params) or '-')
 
                     response = view(**uri_params)
 
                     if encode_response and not isinstance(response, (Response, basestring)):
                         response = encode_response.make_response(response)
 
-                        self.log.debug('%s %s >> %s [%s:%s] (%s)', request.method, uri, encode_response.name,
+                        self.log.debug('%s %s >> %s [%s:%s] (%s)', request.method, url, encode_response.name,
                             type(response.response), len(response.response), response.status)
 
                     return response
 
-                except HTTPException:
-                    raise
+                except HTTPException as error:
+                    if error.response:
+                        # Use exception response if it was already created, either by API.abort(), or custom way.
+                        raise
+                    else:
+                        # Otherwise, create a custom response via API.abort().
+                        self.abort(error.code, error.description)
                 except ApiError as error:
                     self.abort(error.status, error.message)
                 except Exception as error:
                     msg =  str(error) if self.app.debug else self.default_error_message
-                    self.log.exception('%r: %s', self.default_error_status, msg);
                     self.abort(self.default_error_status, msg)
 
             if decorate:
