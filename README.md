@@ -71,6 +71,13 @@ easy_install "Flask-RAML[yaml,raml]"
 
 ## Changelog
 
+### 0.2.2
+
+#### Features
+
+- Create encoded response for default http exceptions.
+- Add error logging.
+
 ### 0.2.1
 
 #### Fixes
