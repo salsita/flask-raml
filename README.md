@@ -2,13 +2,15 @@
 
 Flask-RAML (REST API Markup Language) API server with parameter conversion, response encoding, and examples.
 
-[![Latest Version](https://pypip.in/version/Flask-RAML/badge.svg)]
+[![Version](https://badge.fury.io/gh/salsita%2Fflask-raml.svg)]
+(https://github.com/salsita/flask-raml/tags)
+[![PyPI package](https://badge.fury.io/py/Flask-RAML.svg)]
 (https://pypi.python.org/pypi/Flask-RAML/)
-[![Downloads](https://pypip.in/download/Flask-RAML/badge.svg)]
+[![Downloads](https://img.shields.io/pypi/dm/Flask-RAML.svg)]
 (https://pypi.python.org/pypi/Flask-RAML/)
-[![Supported Python versions](https://pypip.in/py_versions/Flask-RAML/badge.svg)]
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/Flask-RAML.svg)]
 (https://pypi.python.org/pypi/Flask-RAML/)
-[![License](https://pypip.in/license/Flask-RAML/badge.svg)]
+[![License](https://img.shields.io/pypi/l/Flask-RAML.svg)]
 (https://pypi.python.org/pypi/Flask-RAML/)
 
 
