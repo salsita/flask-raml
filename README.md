@@ -2,16 +2,11 @@
 
 Flask-RAML (REST API Markup Language) API server with parameter conversion, response encoding, and examples.
 
-[![Version](https://img.shields.io/github/tag/salsita/flask-raml.svg?label=version)]
-(https://github.com/salsita/flask-raml/tags)
-[![PyPI package](https://img.shields.io/pypi/v/Flask-RAML.svg?label=pypi+package)]
-(https://pypi.python.org/pypi/Flask-RAML/)
-[![Downloads](https://img.shields.io/pypi/dm/Flask-RAML.svg)]
-(https://pypi.python.org/pypi/Flask-RAML/)
-[![Supported Python versions](https://img.shields.io/pypi/pyversions/Flask-RAML.svg)]
-(https://pypi.python.org/pypi/Flask-RAML/)
-[![License](https://img.shields.io/pypi/l/Flask-RAML.svg)]
-(https://pypi.python.org/pypi/Flask-RAML/)
+[![Version](https://img.shields.io/github/tag/salsita/flask-raml.svg?label=version)](https://github.com/salsita/flask-raml/tags)
+[![PyPI package](https://img.shields.io/pypi/v/Flask-RAML.svg?label=pypi+package)](https://pypi.python.org/pypi/Flask-RAML/)
+[![Downloads](https://img.shields.io/pypi/dm/Flask-RAML.svg)](https://pypi.python.org/pypi/Flask-RAML/)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/Flask-RAML.svg)](https://pypi.python.org/pypi/Flask-RAML/)
+[![License](https://img.shields.io/pypi/l/Flask-RAML.svg)](https://pypi.python.org/pypi/Flask-RAML/)
 
 
 ## Supported Platforms
